@@ -1,0 +1,138 @@
+/* Temel Renk Paleti */
+:root {
+    --zarf-rengi: #FFC0CB; /* Açık pembe zarf */
+    --kalp-rengi: #FF69B4;    /* Sıcak pembe kalp */
+    --kagit-rengi: #f7f7f7;    /* Kağıt rengi */
+}
+
+/* Genel Sayfa Ayarları */
+body {
+    background-color: #f0e6f2; /* Sayfa arka planı */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    overflow: hidden; /* Dışarı taşan içeriği gizler */
+}
+
+/* Zarfı ve mektubu kapsayan ana div */
+.zarf-kapsayici {
+    position: relative;
+    width: 300px;
+    height: 200px;
+    cursor: pointer;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    overflow: hidden; /* Bu, en önemli özellik. Mektubu başlangıçta gizler. */
+}
+
+/* Zarfın içindeki mektup kağıdı */
+.mektup {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    /* Mektubu zarfın altına iterek gizler. */
+    transform: translate(-50%, 150%);
+    width: 90%;
+    height: 90%;
+    background-color: var(--kagit-rengi);
+    border-radius: 8px;
+    z-index: 1;
+    transition: transform 1.5s ease-out; /* Animasyon hızı */
+    padding: 20px;
+    box-sizing: border-box;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Zarfın kendisi (dış yüzeyi) */
+.zarf {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--zarf-rengi);
+    border-radius: 10px;
+    z-index: 2; /* Mektuptan önde olmalı */
+}
+
+/* Zarfın açılıp kapanan kapağı (pseudo-element ile) */
+.zarf::before,
+.zarf::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    z-index: 3;
+}
+
+/* Zarfın arka tarafı */
+.zarf::before {
+    left: 0;
+    border-width: 100px 150px 0 150px;
+    border-color: transparent transparent var(--zarf-rengi) transparent;
+}
+
+/* Zarfın açılan kapağı */
+.zarf::after {
+    left: 0;
+    top: 0;
+    border-width: 100px 150px 100px 150px;
+    border-color: var(--zarf-rengi) transparent transparent transparent;
+    transform-origin: top;
+    transition: transform 1s;
+}
+
+/* Zarfın üstündeki kalp simgesi */
+.kalp {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50px;
+    height: 50px;
+    background-color: var(--kalp-rengi);
+    z-index: 4; /* En üstte olmalı */
+    transition: transform 0.5s ease;
+}
+
+/* Kalp için pseudo-elementler */
+.kalp::before,
+.kalp::after {
+    content: '';
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background-color: var(--kalp-rengi);
+    border-radius: 50%;
+}
+
+.kalp::before {
+    top: -25px;
+    left: 0;
+}
+
+.kalp::after {
+    left: 25px;
+    top: 0;
+}
+
+/* "open" sınıfı eklendiğinde animasyonlar */
+.zarf-kapsayici.acik .zarf::after {
+    transform: rotateX(180deg); /* Zarf kapağı açılır */
+}
+
+.zarf-kapsayici.acik .mektup {
+    /* Mektup yukarı doğru kayarak ortaya gelir */
+    transform: translate(-50%, -50%);
+    z-index: 3; /* Açıldıktan sonra kapağın önüne geçer */
+}
+
+.zarf-kapsayici.acik .kalp {
+    /* Kalp büyür ve döner */
+    transform: translate(-50%, -50%) scale(1.5) rotate(45deg);
+}
